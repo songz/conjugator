@@ -58,18 +58,24 @@ let genPresentEnding ending subject => {
     | (Tu, _) => "es"
     | (Ella, Ar) => "a"
     | (Ella, _) => "e"
-    | (Nosotras, _) => "amos"
-    | (Vosotras, _) => "\195\161s"
+    | (Nosotras, Ar) => "amos"
+    | (Nosotras, Er) => "emos"
+    | (Nosotras, _) => "imos"
+    | (Vosotras, Ar) => {js|áis|js}
+    | (Vosotras, Er) => {js|éis|js}
+    | (Vosotras, _) => {js|ís|js}
     | (Ellas, _) => "an"
   }
 };
-
 let genFutureEnding ending subject => {
   switch (subject:Subject.t, ending:Ending.t) {
-    | (Yo, _) => "\130"
-    | (Tu, _) => "\160s"
-    | ()
-  }
+    | (Yo, _) => {js|é|js} 
+    | (Tu, _) => {js|é|js} 
+    | (Ella, _) => {js||js}
+    | (Nosotras, _) => "emos" 
+    | (Vosotras, _) => {js|á|js} 
+    | (Ellas, _) => {js|án|js} 
+    }
 }; 
 
 let conjugate word info => {
@@ -79,7 +85,8 @@ let conjugate word info => {
   let subjectType = Subject.ofString info##subject;
   switch info##tense {
     | "present" => stem ^ (genPresentEnding endingType subjectType)
-    //| "future" => word ^ (genFutureEnding endingType subjectType)
+    | "future" => word ^ (genFutureEnding endingType subjectType)
   }
 };
+
 
